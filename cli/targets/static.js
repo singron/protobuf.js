@@ -42,7 +42,7 @@ function static_target(root, options, callback) {
             push("// Exported root namespace");
         }
         var rootProp = util.safeProp(config.root || "default");
-        push((config.es6 ? "const" : "var") + " $root = $protobuf.roots" + rootProp + " || ($protobuf.roots" + rootProp + " = {});");
+        push((config.es6 ? "const" : "var") + " $root = {};");
         buildNamespace(null, root);
         return callback(null, out.join("\n"));
     } catch (err) {
