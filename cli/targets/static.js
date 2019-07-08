@@ -689,10 +689,9 @@ function buildEnum(ref, enm) {
         Object.keys(enm.values).forEach(function(key) {
             var valueId = enm.values[key];
             var val = config.forceEnumString ? JSON.stringify(key) : valueId;
-            if (aliased.indexOf(valueId) > -1)
-                push("values[" + JSON.stringify(key) + "] = " + val + ";");
-            else {
-                push("values[valuesById[" + valueId + "] = " + JSON.stringify(key) + "] = " + val + ";");
+			push("values."+key+" = " + val + ";");
+            if (aliased.indexOf(valueId) <= -1) {
+                push("valuesById[" + valueId + "] = " + JSON.stringify(key) + ";");
                 aliased.push(valueId);
             }
         });
