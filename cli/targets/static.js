@@ -682,21 +682,18 @@ function buildEnum(ref, enm) {
         comment.push((config.forceEnumString ? "@property {string} " : "@property {number} ") + key + "=" + val + " " + (enm.comments[key] || key + " value"));
     });
     pushComment(comment);
-    push(escapeName(ref) + "." + escapeName(enm.name) + " = (function() {");
+    push(escapeName(ref) + "." + escapeName(enm.name) + " = {");
     ++indent;
-        push((config.es6 ? "const" : "var") + " valuesById = {}, values = Object.create(valuesById);");
-        var aliased = [];
-        Object.keys(enm.values).forEach(function(key) {
-            var valueId = enm.values[key];
-            var val = config.forceEnumString ? JSON.stringify(key) : valueId;
-            if (aliased.indexOf(valueId) > -1)
-                push("values[" + JSON.stringify(key) + "] = " + val + ";");
-            else {
-                push("values[valuesById[" + valueId + "] = " + JSON.stringify(key) + "] = " + val + ";");
-                aliased.push(valueId);
-            }
-        });
-        push("return values;");
-    --indent;
-    push("})();");
+		var aliased = [];
+		Object.keys(enm.values).forEach(function(key) {
+			var valueId = enm.values[key];
+			var val = config.forceEnumString ? JSON.stringify(key) : valueId;
+			push(key + ": " + val + ",");
+			if (aliased.indexOf(valueId) <= -1) {
+				push("" + valueId + ": " + JSON.stringify(key) + ",");
+				aliased.push(valueId);
+			}
+		});
+	--indent;
+	push("};");
 }
